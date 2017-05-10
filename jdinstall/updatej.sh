@@ -42,7 +42,7 @@ filedir="/home/osmc/"
 
 
 		 apt-get update && apt-get install openbox x11vnc Xvfb -y	
- 		echo -e "andrej1982\nandrej1982\n" | x11vnc -storepasswd
+ 		echo -e "heslo\nheslo\n" | x11vnc -storepasswd
  		JDownload
 	for i in ${!systemdConf[@]}; do
                 "${systemdConf[$i]}"
