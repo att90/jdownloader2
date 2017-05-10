@@ -1,6 +1,6 @@
 #!/bin/bash
 ###Variable
-source  /home/osmc/script/funkcie
+source   ${PWD}/funkcie
 
 declare -A systemdConf
 
