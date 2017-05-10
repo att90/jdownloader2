@@ -1,0 +1,99 @@
+#!/bin/bash
+
+
+JDownload() {
+
+mkdir ~osmc/jdownloader && chown -R osmc:osmc ~osmc/jdownloader
+cd ~osmc/jdownloader && wget http://installer.jdownloader.org/JDownloader.jar
+}
+
+
+JDconfig() {
+
+        
+        cat > /etc/systemd/system/jdownloader.service << EOF
+	[Unit]
+Description=JDownloader
+Before=shutdown.target
+After=networking.service
+Conflicts=shutdown.target
+
+[Service]
+Type=forking
+EnvironmentFile=/etc/JDownloader2.cfg
+Environment=DISPLAY=:1
+Restart=no
+TimeoutSec=5min
+IgnoreSIGPIPE=no
+KillMode=process
+GuessMainPID=no
+RemainAfterExit=no
+ExecStart=/sbin/start-stop-daemon --start --quiet --background --make-pidfile --pidfile \$PIDFILE --chuid \$RUN_AS --exec \$COMMAND
+ExecStop=/sbin/start-stop-daemon --stop --quiet --pidfile \$PIDFILE
+EOF
+}
+
+OBoxconfig() {
+
+	cat > /etc/systemd/system/openbox.service << EOF
+[Unit]
+Description=Openbox
+
+[Service]
+Environment="DISPLAY=:1"
+ExecStart=/usr/bin/openbox-session
+User=osmc
+Restart=on-failure
+[Install]
+WantedBy=multi-user.target
+EOF
+}
+
+VNCconfig() {
+
+	cat > /etc/systemd/system/vnc.service << EOF
+[Unit]
+Description=x11vnc
+
+[Service]
+ExecStart=/usr/bin/x11vnc -forever -display :1 -xkb -rfbauth /home/osmc/.vnc/passwd
+User=osmc
+Restart=on-failure
+[Install]
+WantedBy=multi-user.target
+EOF
+}
+
+Xvfbconfig() {
+
+	cat > /etc/systemd/system/xvfb.service << EOF
+[Unit]
+Description=Xvfb
+
+[Service]
+ExecStart=/usr/bin/Xvfb :1 -screen 0 1600x900x24
+User=osmc
+Restart=on-failure
+[Install]
+WantedBy=multi-user.target
+EOF
+}
+
+
+JDETCconfig() {
+	
+	cat > /etc//etc/JDownloader2.cfg << EOF
+DESC="JDownloader 2"
+NAME=JDownloader2
+COMMAND="/usr/bin/java -- -jar /home/osmc/jdownloader/JDownloader.jar"
+RUN_AS=osmc
+PIDFILE=/var/run/jdownloader.pid
+EOF
+}
+
+JAVAinstall() {
+		/bin/echo -e  "Installing Java version is: \e[92m"${newVersion}"\e[39m"
+                /bin/tar zxfv "${filedir}""${url##*/}" -C /opt/
+                /usr/sbin/update-alternatives --install "/usr/bin/java" "java" "/opt/"${dirname}"/bin/java" 1
+                /usr/sbin/update-alternatives --set "java" "/opt/"${dirname}"/bin/java"
+}
