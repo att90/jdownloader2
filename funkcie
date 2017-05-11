@@ -3,7 +3,7 @@
 
 JDownload() {
 
-mkdir ~osmc/jdownloader && cd ~osmc/jdownloader && wget http://installer.jdownloader.org/JDownloader.jar && chown -R osmc:osmc ~osmc/jdownloader
+mkdir /opt/jdownloader && cd /opt/jdownloader && wget http://installer.jdownloader.org/JDownloader.jar && chown -R osmc:osmc /opt/jdownloader
 
 }
 
@@ -85,7 +85,7 @@ JDETCconfig() {
 	cat > /etc/JDownloader2.cfg << EOF
 DESC="JDownloader 2"
 NAME=JDownloader2
-COMMAND="/usr/bin/java -- -jar /home/osmc/jdownloader/JDownloader.jar"
+COMMAND="/usr/bin/java -- -jar /opt/jdownloader/JDownloader.jar"
 RUN_AS=osmc
 PIDFILE=/var/run/jdownloader.pid
 EOF

@@ -50,18 +50,8 @@ filedir="/home/osmc/"
 						fi
 				done
 
-		JDownload
-
-		for i in ${!systemdConf[@]}; do
-                "${systemdConf[$i]}"
-                done
 	
  	fi
-
-	if [[ ! -f  /etc/JDownloader2.cfg ]];then
-		
-		JDETCconfig		
-	fi	
 
 	if  [[ -z "${inVersion}" ]]  || [[ "${newVersion}" -gt "${inVersion}" ]] && [[ -z  `pgrep java` ]] ; then
                 
@@ -72,8 +62,14 @@ filedir="/home/osmc/"
 			/usr/bin/wget -P ${filedir} --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"  "${url}"  2>&1 /dev/null
          
 			if [[ -f "${filedir}""${url##*/}" ]];then
-		
 			JAVAinstall
+			JDownload
+			for i in ${!systemdConf[@]}; do
+	                "${systemdConf[$i]}"
+        	        done
+			if [[ ! -f  /etc/JDownloader2.cfg ]];then
+			JDETCconfig
+			fi	
 			EnableService	
 
 			fi
