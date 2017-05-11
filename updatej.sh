@@ -40,38 +40,42 @@ filedir="/home/osmc/"
 
 	if [[ ! -f /usr/bin/x11vnc ]] || [[ ! -f /usr/bin/Xvfb ]] || [[ ! -f /usr/bin/openbox ]]; then
  		echo -e  -n "Zadaj Heslo pre VNC: "
-		HESLO=""
-		while [[ $HESLO == "" ]]; do
-		echo -e  -n "Zadaj Heslo pre VNC: "
-		read HESLO
-			if [[ ! $HESLO == "" ]]; then
-     		apt-get install openbox x11vnc Xvfb -y
-		echo -e ""${HESLO}"\n"${HESLO}"\n" |sudo -u osmc  x11vnc -storepasswd
-		fi
-		done
+			HESLO=""
+				while [[ $HESLO == "" ]]; do
+					echo -e  -n "Zadaj Heslo pre VNC: "
+					read HESLO
+						if [[ ! $HESLO == "" ]]; then
+     						apt-get install openbox x11vnc Xvfb -y
+						echo -e ""${HESLO}"\n"${HESLO}"\n" |sudo -u osmc  x11vnc -storepasswd
+						fi
+				done
+
 		JDownload
+
 		for i in ${!systemdConf[@]}; do
                 "${systemdConf[$i]}"
                 done
 	
  	fi
 
-
 	if [[ ! -f  /etc/JDownloader2.cfg ]];then
 		
 		JDETCconfig		
 	fi	
+
 	if  [[ -z "${inVersion}" ]]  || [[ "${newVersion}" -gt "${inVersion}" ]] && [[ -z  `pgrep java` ]] ; then
                 
 		if [[  -f "${filedir}""${url##*/}" ]];then
-		rm  "${filedir}""${url##*/}"*
-		fi
-		/usr/bin/wget -P ${filedir} --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"  "${url}"  2>&1 /dev/null
+			rm  "${filedir}""${url##*/}"*
+	fi
+	
+			/usr/bin/wget -P ${filedir} --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"  "${url}"  2>&1 /dev/null
          
 			if [[ -f "${filedir}""${url##*/}" ]];then
 		
 			JAVAinstall
 			EnableService	
+
 			fi
 	else
 		
@@ -81,10 +85,6 @@ filedir="/home/osmc/"
 		/bin/echo 
 	
 	fi
-
-
-
-
 
 
  #		   fi 
