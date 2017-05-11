@@ -42,6 +42,7 @@ filedir="/home/osmc/"
  		echo -e  -n "Zadaj Heslo pre VNC: "
 		HESLO=""
 		while [[ $HESLO == "" ]]; do
+		echo -e  -n "Zadaj Heslo pre VNC: "
 		read HESLO
 			if [[ ! $HESLO == "" ]]; then
      		apt-get install openbox x11vnc Xvfb -y
