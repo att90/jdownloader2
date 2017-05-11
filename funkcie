@@ -3,8 +3,8 @@
 
 JDownload() {
 
-mkdir ~osmc/jdownloader && chown -R osmc:osmc ~osmc/jdownloader
-cd ~osmc/jdownloader && wget http://installer.jdownloader.org/JDownloader.jar
+mkdir ~osmc/jdownloader && cd ~osmc/jdownloader && wget http://installer.jdownloader.org/JDownloader.jar && chown -R osmc:osmc ~osmc/jdownloader
+
 }
 
 
@@ -82,7 +82,7 @@ EOF
 
 JDETCconfig() {
 	
-	cat > /etc//etc/JDownloader2.cfg << EOF
+	cat > /etc/JDownloader2.cfg << EOF
 DESC="JDownloader 2"
 NAME=JDownloader2
 COMMAND="/usr/bin/java -- -jar /home/osmc/jdownloader/JDownloader.jar"
@@ -97,3 +97,13 @@ JAVAinstall() {
                 /usr/sbin/update-alternatives --install "/usr/bin/java" "java" "/opt/"${dirname}"/bin/java" 1
                 /usr/sbin/update-alternatives --set "java" "/opt/"${dirname}"/bin/java"
 }
+
+EnableService() {
+
+		for i in  xvfb.service openbox.service vnc.service ; do
+		systemctl enable "${i}" ; done
+
+		for i in  xvfb.service openbox.service vnc.service ; do
+		systemctl start "${i}"; sleep 2; done
+}
+

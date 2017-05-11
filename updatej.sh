@@ -8,7 +8,6 @@ systemdConf[jdownloader]=JDconfig
 systemdConf[vnc]=VNCconfig
 systemdConf[openbox]=OBoxconfig
 systemdConf[xvfb]=Xvfbconfig
-
 url=$(curl http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html 2>&1|grep -o -E 'http://.*arm32.*hflt.tar.gz')
 
 newVersion=$(/bin/echo ${url##*/}|sed -r 's/jdk-8u([0-9]{1,3}).*/\1/g')
@@ -39,15 +38,18 @@ filedir="/home/osmc/"
 #                      if [[ $confirm = "y" || $confirm = "Y" ]]; then
 
 
+	if [[ ! -f /usr/bin/x11vnc ]] || [[ ! -f /usr/bin/Xvfb ]] || [[ ! -f /usr/bin/openbox ]]; then
 
-
-		 apt-get update && apt-get install openbox x11vnc Xvfb -y	
- 		echo -e "heslo\nheslo\n" | x11vnc -storepasswd
- 		JDownload
-		JDETCconfig
+ 		echo -e  -n "Zadaj Heslo pre VNC: "
+		read HESLO
+ 	#	apt-get update && apt-get install openbox x11vnc Xvfb -y
+		echo -e ""${HESLO}"\n"${HESLO}"\n" |sudo -u osmc  x11vnc -storepasswd
+		JDownload
 		for i in ${!systemdConf[@]}; do
                 "${systemdConf[$i]}"
                 done
+ 	fi
+
 
 	if [[ ! -f  /etc/JDownloader2.cfg ]];then
 		
@@ -55,7 +57,9 @@ filedir="/home/osmc/"
 	fi	
 	if  [[ -z "${inVersion}" ]]  || [[ "${newVersion}" -gt "${inVersion}" ]] && [[ -z  `pgrep java` ]] ; then
                 
+		if [[  -f "${filedir}""${url##*/}" ]];then
 		rm  "${filedir}""${url##*/}"*
+		fi
 		/usr/bin/wget -P ${filedir} --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"  "${url}"  2>&1 /dev/null
          
 			if [[ -f "${filedir}""${url##*/}" ]];then
@@ -74,11 +78,6 @@ filedir="/home/osmc/"
 
 
 
-       if [[  -f "${filedir}""${url##*/}" ]];then
-
-		rm  "${filedir}""${url##*/}"*
-
-	fi
 
 
 
